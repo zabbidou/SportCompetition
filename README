@@ -1,0 +1,70 @@
+--------------------------------------------------------------------------------
+| Gherman Maria Irina  ____  ____  _  _   __     ____           324 CB         |
+|                     (_  _)(  __)( \/ ) / _\   ( __ \                         |
+|                       )(   ) _) / \/ \/    \   (__ (                         |
+|                      (__) (____)\_)(_/\_/\_/  (____/                         |
+|                                                                              |
+--------------------------------------------------------------------------------
+
+    Pentru ca ideea temei este detaliata destul de bine in enunt, o sa explic
+doar clasele / metodele importante:
+
+1. Team (si ITeam)
+    - este clasa abstracta pe baza careia mi-am construit clasele concrete
+HandballTeam, FootballTeam si BasketballTeam.
+    - interfata ITeam este o
+abstractizare pe care am gasit-o necesara pentru a forta clasele concrete
+sa implementeze Visitor.
+
+2. TeamFactory
+    - aici am folosit design pattern-ul Factory pentru a crea facil mai multe
+tipuri de echipe, in combinatie cu Singleton (pentru a instantia factory-ul
+o singura data)
+
+3. Database
+    - o clasa ajutatoare in care stochez toate echipele in ordinea adaugarii.
+    - contine alte functii ajutatoare pentru a gasi echipe sau pentru a 
+verifica validitatea comenzilor date programului
+    - de asemenea implementata folosind Singleton
+
+4. FileReader / FileWrapper
+    - la fiecare tema am descoperit ca este usor sa imi creez singura wrappere
+friendly pentru a citi / scrie in fisier, deoarece sunt usor adaptabile la
+diferite cerinte ale diferitelor teme
+    - am folosit Singleton si aici
+
+5. Competition
+    - aici am 3 ArrayList-uri, unul pentru clasament (ordonat in functie de
+punctajul fiecarei echipe dupa finalul competitiei) si unul pentru echipele
+inregistrare (stocate in ordinea inregistrarii)
+    - in metoda run folosesc design pattern-ul Visitor pentru a determina
+castigatorul intre doua echipe (scorul fiecareia fiind calculat in metoda
+visit, asa cum cere cerinta)
+    - dupa ce s-a terminat competita, fiecare echipa este "instiintata" de
+locul ocupat in clasament prin design pattern-ul Observer.
+    - metoda aftermath doar scrie in fisier output-ul cerut dupa o competitie.
+
+6. MatchImplementation / MatchVisitor si Strategy / ...TeamScore
+    - in "versiunea" initiala, aveam scorul calculat in metoda visit din
+MatchImplementation (fix codul din ...TeamScore, desigur, la tipurile de echipa
+corespunzatoare)
+    - MatchVisitor este doar interfata ceruta de design pattern-ul Visitor.
+    - pentru bonus, am mutat codul pentru a calcula scorul in computeScore
+din clasele BasketballTeamScore, HandballTeamScore si FootballTeamScore, clase
+care implementeaza interfata Strategy pentru a decide la run-time ce metoda
+se foloseste
+
+    Am implementat asa cele 2 design patterns, Visitor si Strategy, pentru ca
+alte solutii mi se pareau ilogice. Eu am considerat ca trebuie pastrate cele
+3 visit-uri "concrete" din MatchImplementation, pentru ca altfel Visitor nu mai
+avea sens. M-am ghidat dupa exemplul[1] pus pe forum pentru a vedea exact cum
+s-ar cere de la mine sa implementez Strategy. 
+    O alta implementare care aducea un alt nivel de abstractizare asupra 
+metodelor apelate la run-time ar fi fost sa mut apelarea strategy.computeScore 
+dupa apelul lui visit in MatchImplementation, pentru a pastra implementarea
+concreta mai "ascunsa" si pentru a folosi Visitor doar pentru a decide contextul
+pentru Strategy. 
+    Sper ca, cu implementarea mea curenta pentru bonus, am inteles cerinta cum
+trebuie (si am si rezolvat-o corect, desigur).
+
+[1] - https://www.tutorialspoint.com/design_pattern/strategy_pattern.htm
